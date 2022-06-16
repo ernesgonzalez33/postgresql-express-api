@@ -43,7 +43,7 @@ Table: Products (id:serial primary key, name:varchar, price:number)
 - lastName
 - password
 
-Table: Users (id:serial primary key, firstName:varchar, lastName:varchar, password_digest:varchar)
+Table: Users (id:serial primary key, first_name:varchar, last_name:varchar, password_digest:varchar)
 
 #### Orders
 
