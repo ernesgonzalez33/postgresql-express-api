@@ -1,0 +1,4 @@
+DROP TABLE orders CASCADE;
+DROP TYPE status CASCADE;
+DROP TABLE users;
+DROP TABLE products;
