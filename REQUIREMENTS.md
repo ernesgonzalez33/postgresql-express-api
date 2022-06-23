@@ -54,4 +54,7 @@ Table: Users (id:serial primary key, first_name:varchar, last_name:varchar, pass
 - status of order (active or complete)
 
 Enum: status (active, complete)
-Table: Orders (id:serial primary key, product_id:references products(id), quantity:number, user_id:references users(id), status:status)
+Tables: 
+
+Orders (id:serial primary key, user_id:references users(id), status:status)
+Order_products (id:serial primary key, quantity:number, product_id:references products(id), order_id:references orders(id))
