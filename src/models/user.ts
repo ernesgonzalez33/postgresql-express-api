@@ -13,6 +13,17 @@ dotenv.config()
 const pepper = process.env.BCRYPT_PASSWORD;
 const saltRounds = process.env.SALT_ROUNDS as unknown as string;
 
+// Function to convert users from PSQL queries to camelCase
+function convertUserToCamelCase(sqlUser: {id: number, first_name: string, last_name: string, password_digest: string}): User {
+  const userNew = {
+    id: sqlUser.id,
+    firstName: sqlUser.first_name,
+    lastName: sqlUser.last_name,
+    password: sqlUser.password_digest
+  }
+  return userNew;
+}
+
 export class UserStore {
   async index(): Promise<User[]> {
     try {
@@ -23,7 +34,14 @@ export class UserStore {
 
       conn.release();
 
-      return result.rows;
+      // Convert results from the query to camelCase
+      const users: User[] = [];
+
+      for(var user of result.rows){
+        users.push(convertUserToCamelCase(user));
+      }
+
+      return users;
     } catch (err) {
       throw new Error(`Could not get users. Error: ${err}`);
     }
@@ -38,7 +56,7 @@ export class UserStore {
 
       conn.release();
 
-      return result.rows[0];
+      return convertUserToCamelCase(result.rows[0]);
     } catch (err) {
       throw new Error(`Could not find user ${id}. Error: ${err}`);
     }
@@ -59,26 +77,18 @@ export class UserStore {
       const result = await conn.query(sql, [u.firstName, u.lastName, hash]);
       const user= result.rows[0];
 
-      // Convert the result to Camel Case again
-      const userNew = {
-        id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        password: user.password_digest
-      }
-
       conn.release();
 
-      return userNew
+      return convertUserToCamelCase(user);
 
     } catch (err) {
       throw new Error(`Could not add new user ${u.firstName}. Error: ${err}`);
     }
   }
 
-  async authenticate(id: number, password: string): Promise<User | null> {
+  async authenticate(id: string, password: string): Promise<User | null> {
     const conn = await Client.connect();
-    const sql = 'SELECT password_digest FROM users WHERE user_id=($1)';
+    const sql = 'SELECT * FROM users WHERE id=($1)';
 
     const result = await conn.query(sql, [id]);
 
@@ -87,7 +97,7 @@ export class UserStore {
       const user = result.rows[0];
 
       if (bcrypt.compareSync(password+pepper, user.password_digest)) {
-        return user;
+        return convertUserToCamelCase(user);
       }
     }
 
