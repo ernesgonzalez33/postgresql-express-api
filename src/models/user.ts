@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
 export type User = {
-  id: number;
+  id?: number;
   firstName: string;
   lastName: string;
   password: string;
@@ -47,7 +47,7 @@ export class UserStore {
   async create(u: User): Promise<User> {
     try {
       const sql =
-        "INSERT INTO users (firstName, lastName, password_digest) VALUES($1, $2, $3) RETURNING *";
+        "INSERT INTO users (first_name, last_name, password_digest) VALUES($1, $2, $3) RETURNING *";
 
       const conn = await Client.connect();
 
