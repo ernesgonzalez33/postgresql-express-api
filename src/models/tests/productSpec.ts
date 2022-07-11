@@ -21,16 +21,16 @@ describe("Product Model", () => {
       price: 20
     });
     expect(result).toEqual({
-      id: 1,
+      id: 2,
       name: 'Jam',
       price: 20
     });
   });
 
   it('should show a Product', async () => {
-    const result = await store.show("1");
+    const result = await store.show("2");
     expect(result).toEqual({
-      id: 1,
+      id: 2,
       name: 'Jam',
       price: 20
     });
