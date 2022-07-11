@@ -57,11 +57,19 @@ export class UserStore {
       );
 
       const result = await conn.query(sql, [u.firstName, u.lastName, hash]);
-      const user = result.rows[0];
+      const user= result.rows[0];
+
+      // Convert the result to Camel Case again
+      const userNew = {
+        id: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        password: user.password_digest
+      }
 
       conn.release();
 
-      return user
+      return userNew
 
     } catch (err) {
       throw new Error(`Could not add new user ${u.firstName}. Error: ${err}`);
