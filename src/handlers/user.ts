@@ -1,5 +1,18 @@
 import express, { Request, Response } from "express";
 import { User, UserStore } from "../models/user";
+import jwt from "jsonwebtoken";
+
+const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
+  try {
+    const authorizationHeader = req.headers.authorization;
+    const token = authorizationHeader!.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string);
+
+    next();
+  } catch (error) {
+    res.status(401);
+  }
+};
 
 const store = new UserStore();
 
@@ -14,24 +27,24 @@ const show = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
+  const user: User = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    password: req.body.password,
+  };
   try {
-    const user: User = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      password: req.body.password
-    };
-
     const newUser = await store.create(user);
-    res.json(newUser);
+    var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string);
+    res.json(token);
   } catch (err) {
     res.status(400);
-    res.json(err);
+    res.json(err as string + user);
   }
 };
 
 const userRoutes = (app: express.Application) => {
-  app.get("/users", index);
-  app.get("/users/:id", show);
+  app.get("/users", verifyAuthToken, index);
+  app.get("/users/:id", verifyAuthToken, show);
   app.post("/users", create);
 };
 
