@@ -26,15 +26,12 @@ describe("User Model", () => {
       password: "pass123",
     });
     expect(result.firstName).toEqual("Ernesto");
-    expect(result.id).toEqual(2);
     expect(result.lastName).toEqual("González");
   });
 
   it('should show a User', async () => {
     const result = await store.show("2");
-    expect(result.firstName).toEqual("Ernesto");
     expect(result.id).toEqual(2);
-    expect(result.lastName).toEqual("González");
   })
 
   it('should show a list of Users', async () => {
@@ -45,8 +42,8 @@ describe("User Model", () => {
   it('should be able to authenticate', async () => {
     const result = await store.authenticate('2', "pass123");
     expect(result).not.toBeNull;
-    expect(result!.firstName).toEqual("Ernesto");
+    expect(result!.firstName).toEqual("John");
     expect(result!.id).toEqual(2);
-    expect(result!.lastName).toEqual("González");
+    expect(result!.lastName).toEqual("Doe");
   })
 });

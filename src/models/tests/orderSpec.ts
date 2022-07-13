@@ -25,11 +25,7 @@ describe("Order Model", () => {
             userId: 1,
             status: 'active'
         });
-        expect(order).toEqual({
-            id: 1,
-            userId: 1,
-            status: 'active'
-        })
+        expect(order.status).toEqual('active');
     });
 
     it('should add a product to the order', async () => {

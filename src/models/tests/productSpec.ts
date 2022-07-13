@@ -20,20 +20,13 @@ describe("Product Model", () => {
       name: 'Jam',
       price: 20
     });
-    expect(result).toEqual({
-      id: 2,
-      name: 'Jam',
-      price: 20
-    });
+    expect(result.price).toEqual(20);
+    expect(result.name).toEqual('Jam');
   });
 
   it('should show a Product', async () => {
-    const result = await store.show("2");
-    expect(result).toEqual({
-      id: 2,
-      name: 'Jam',
-      price: 20
-    });
+    const result = await store.show("1");
+    expect(result.id).toEqual(1);
   })
 
   it('should show a list of Products', async () => {
