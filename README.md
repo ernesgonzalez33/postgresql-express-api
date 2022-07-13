@@ -1,54 +1,70 @@
 # Storefront Backend Project
 
-## Getting Started
+This repo contains the of a Storefront backend that lets you create users, orders and products and even find and order of a certain user if it is active.
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+## How to use
 
-## Required Technologies
-Your application must make use of the following libraries:
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+1. First clone the repo:
 
-## Steps to Completion
+```
+$ git clone git@github.com:ernesgonzalez33/postgresql-express-api.git
+$ cd postgresql-express-api
+```
 
-### 1. Plan to Meet Requirements
+2. Install all required packages:
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+```
+$ npm install
+```
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+3. Create a .env file with the following structure:
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+```
+POSTGRES_HOST=127.0.0.1
+POSTGRES_DB=storefront_db
+POSTGRES_TEST_DB=storefront_db_test
+POSTGRES_USER=storefront_user
+POSTGRES_PASSWORD=<your-password>
+BCRYPT_PASSWORD=<your-bcrypt-password>
+SALT_ROUNDS=10
+ENV=dev
+TOKEN_SECRET=<your-token-secret>
+```
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+> NOTE: You can change the names of the databases.
 
-### 2.  DB Creation and Migrations
+4. Spin up the database
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
+```
+$ docker-compose up
+```
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+5. Build the code
 
-### 3. Models
+```
+$ npm run build
+```
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+6. Run the server
 
-### 4. Express Handlers
+```
+$ node dist/server.js
+```
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+Now you can use the API with the endpoints specificied in the [REQUIREMENTS.md](./REQUIREMENTS.md).
 
-### 5. JWTs
+## How to run the tests
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+For running the tests, it is imperative that you connect to the postgres image, create the database that is in the `.env` file inside the environment variable called `POSTGRES_TEST_DB`.
 
-### 6. QA and `README.md`
+```bash
+$ psql -h ${POSTGRES_HOST} -p 5432 -U ${POSTGRES_USER} ${POSTGRES_DB}
+# <introduce the password for the user>
+$ create database <POSTGRES_TEST_DB>
+```
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
+After that, you can run the test with:
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+```
+$ npm run test
+```
