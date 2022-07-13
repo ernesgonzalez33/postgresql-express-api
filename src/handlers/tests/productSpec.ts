@@ -15,12 +15,12 @@ describe("Product Handler", () => {
   });
 
   it("should create a new product", async () => {
-    const token = await req.post("/users").send({
+    const user = await req.post("/users").send({
       firstName: "API",
       lastName: "User",
       password: "pass123",
     });
-    expect(token.status).toBe(200);
+    expect(user.status).toBe(200);
 
     const res = await req
       .post("/products")
@@ -28,7 +28,7 @@ describe("Product Handler", () => {
         name: "API Test Product",
         price: 10,
       })
-      .set("Authorization", "Bearer " + token.body);
+      .set("Authorization", "Bearer " + user.body.token);
     expect(res.status).toEqual(200);
   });
 });

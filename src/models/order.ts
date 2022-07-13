@@ -11,7 +11,7 @@ export type OrderProduct = {
   id?: number;
   quantity: number;
   productId: number;
-  orderId: number;
+  orderId?: number;
 }
 
 // Function to convert orders from PSQL queries to camelCase

@@ -19,18 +19,18 @@ describe("User Handler", () => {
   });
 
   it("should return a 200 status in the index endpoint", async () => {
-    const token = await createTestUser();
+    const user = await createTestUser();
     const res = await req
       .get("/users")
-      .set("Authorization", "Bearer " + token.body);
+      .set("Authorization", "Bearer " + user.body.token);
     expect(res.status).toBe(200);
   });
 
   it("should return a 200 status in the show endpoint", async () => {
-    const token = await createTestUser();
+    const user = await createTestUser();
     const res = await req
       .get("/users/1")
-      .set("Authorization", "Bearer " + token.body);
+      .set("Authorization", "Bearer " + user.body.token);
     expect(res.status).toBe(200);
   });
 });

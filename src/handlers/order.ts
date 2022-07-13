@@ -23,11 +23,7 @@ const create = async (req: Request, res: Response) => {
   };
   try {
     const newOrder = await store.create(order);
-    var token = jwt.sign(
-      { order: newOrder },
-      process.env.TOKEN_SECRET as string
-    );
-    res.json(token);
+    res.json(newOrder);
   } catch (err) {
     res.status(400);
     res.json((err as string) + order);
@@ -35,7 +31,7 @@ const create = async (req: Request, res: Response) => {
 };
 
 const addProduct = async (req: Request, res: Response) => {
-  const orderId: number = parseInt(req.params.orderId);
+  const orderId: number = parseInt(req.params.id);
   const productId: number = req.body.productId;
   const quantity: number = parseInt(req.body.quantity);
 
@@ -51,11 +47,10 @@ const addProduct = async (req: Request, res: Response) => {
 const currentOrderByUser = async (req: Request, res: Response) => {
   const orderProduct: OrderProduct = {
     quantity: req.body.quantity,
-    productId: req.body.productId,
-    orderId: req.body.orderId,
+    productId: req.body.productId
   };
 
-  const userId: number = parseInt(req.params.userId);
+  const userId: number = parseInt(req.params.id);
 
   try {
     const newOrderProduct = store.currentOrderByUser(userId)
@@ -69,7 +64,7 @@ const currentOrderByUser = async (req: Request, res: Response) => {
 const orderRoutes = (app: express.Application) => {
   app.post("/orders", create);
   app.post("/orders/:id/products", addProduct);
-  app.get("/users/:id/order/:id", verifyAuthToken, currentOrderByUser);
+  app.get("/users/:id/order", verifyAuthToken, currentOrderByUser);
 };
 
 export default orderRoutes;
