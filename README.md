@@ -39,6 +39,12 @@ TOKEN_SECRET=<your-token-secret>
 $ docker-compose up
 ```
 
+5. In another terminal, run the migration:
+
+```
+$ db-migrate up
+```
+
 5. Build the code
 
 ```
