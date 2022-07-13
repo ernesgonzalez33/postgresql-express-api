@@ -42,8 +42,6 @@ describe("User Model", () => {
   it('should be able to authenticate', async () => {
     const result = await store.authenticate('2', "pass123");
     expect(result).not.toBeNull;
-    expect(result!.firstName).toEqual("John");
     expect(result!.id).toEqual(2);
-    expect(result!.lastName).toEqual("Doe");
   })
 });
