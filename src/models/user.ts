@@ -1,6 +1,6 @@
-import Client from "../database";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
+import Client from '../database';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 
 export type User = {
   id?: number;
@@ -24,7 +24,7 @@ function convertUserToCamelCase(sqlUser: {
     id: sqlUser.id,
     firstName: sqlUser.first_name,
     lastName: sqlUser.last_name,
-    password: sqlUser.password_digest,
+    password: sqlUser.password_digest
   };
   return userNew;
 }
@@ -33,7 +33,7 @@ export class UserStore {
   async index(): Promise<User[]> {
     try {
       const conn = await Client.connect();
-      const sql = "SELECT * FROM users";
+      const sql = 'SELECT * FROM users';
 
       const result = await conn.query(sql);
 
@@ -55,7 +55,7 @@ export class UserStore {
   async show(id: string): Promise<User> {
     try {
       const conn = await Client.connect();
-      const sql = "SELECT * FROM users WHERE id=($1)";
+      const sql = 'SELECT * FROM users WHERE id=($1)';
 
       const result = await conn.query(sql, [id]);
 
@@ -70,7 +70,7 @@ export class UserStore {
   async create(u: User): Promise<User> {
     try {
       const sql =
-        "INSERT INTO users (first_name, last_name, password_digest) VALUES($1, $2, $3) RETURNING *";
+        'INSERT INTO users (first_name, last_name, password_digest) VALUES($1, $2, $3) RETURNING *';
 
       const conn = await Client.connect();
 
@@ -90,7 +90,7 @@ export class UserStore {
   async authenticate(id: string, password: string): Promise<User | null> {
     try {
       const conn = await Client.connect();
-      const sql = "SELECT * FROM users WHERE id=($1)";
+      const sql = 'SELECT * FROM users WHERE id=($1)';
 
       const result = await conn.query(sql, [id]);
 

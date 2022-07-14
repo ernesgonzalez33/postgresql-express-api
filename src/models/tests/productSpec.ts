@@ -1,9 +1,9 @@
-import { Product, ProductStore } from "../product";
+import { Product, ProductStore } from '../product';
 
 const store = new ProductStore();
 
-describe("Product Model", () => {
-  it("should have an index method", () => {
+describe('Product Model', () => {
+  it('should have an index method', () => {
     expect(store.index).toBeDefined();
   });
 
@@ -25,12 +25,12 @@ describe("Product Model", () => {
   });
 
   it('should show a Product', async () => {
-    const result = await store.show("1");
+    const result = await store.show('1');
     expect(result.id).toEqual(1);
-  })
+  });
 
   it('should show a list of Products', async () => {
     const result = await store.index();
     expect(result).toBeInstanceOf(Array<Product>);
-  })
+  });
 });

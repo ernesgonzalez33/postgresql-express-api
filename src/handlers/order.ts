@@ -1,11 +1,11 @@
-import express, { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { Order, OrderProduct, OrderStore } from "../models/order";
+import express, { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { Order, OrderProduct, OrderStore } from '../models/order';
 
 const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   try {
     const authorizationHeader = req.headers.authorization;
-    const token = authorizationHeader!.split(" ")[1];
+    const token = authorizationHeader!.split(' ')[1];
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string);
 
     next();
@@ -19,7 +19,7 @@ const store = new OrderStore();
 const create = async (req: Request, res: Response) => {
   const order: Order = {
     userId: req.body.userId,
-    status: req.body.status,
+    status: req.body.status
   };
   try {
     const newOrder = await store.create(order);
@@ -53,7 +53,7 @@ const currentOrderByUser = async (req: Request, res: Response) => {
   const userId: number = parseInt(req.params.id);
 
   try {
-    const newOrderProduct = await store.currentOrderByUser(userId)
+    const newOrderProduct = await store.currentOrderByUser(userId);
     res.json(newOrderProduct);
   } catch (err) {
     res.status(400);
@@ -62,9 +62,9 @@ const currentOrderByUser = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.post("/orders", verifyAuthToken, create);
-  app.post("/orders/:id/products", verifyAuthToken, addProduct);
-  app.get("/users/:id/order", verifyAuthToken, currentOrderByUser);
+  app.post('/orders', verifyAuthToken, create);
+  app.post('/orders/:id/products', verifyAuthToken, addProduct);
+  app.get('/users/:id/order', verifyAuthToken, currentOrderByUser);
 };
 
 export default orderRoutes;

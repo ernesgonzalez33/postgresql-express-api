@@ -1,5 +1,5 @@
-import Client from "../database";
-import { Product } from "./product";
+import Client from '../database';
+import { Product } from './product';
 
 export type Order = {
   id?: number;
@@ -12,25 +12,34 @@ export type OrderProduct = {
   quantity: number;
   productId: number;
   orderId?: number;
-}
+};
 
 // Function to convert orders from PSQL queries to camelCase
-function convertOrderToCamelCase(sqlOrder: {id: number, user_id: number, status: string}): Order {
+function convertOrderToCamelCase(sqlOrder: {
+  id: number;
+  user_id: number;
+  status: string;
+}): Order {
   const orderNew = {
     id: sqlOrder.id,
     userId: sqlOrder.user_id,
     status: sqlOrder.status
-  }
+  };
   return orderNew;
 }
 
-function convertOrderProductToCamelCase(sqlOrderProduct: {id: number, quantity: number, product_id: number, order_id: number}): OrderProduct {
+function convertOrderProductToCamelCase(sqlOrderProduct: {
+  id: number;
+  quantity: number;
+  product_id: number;
+  order_id: number;
+}): OrderProduct {
   const orderProductNew = {
     id: sqlOrderProduct.id,
     quantity: sqlOrderProduct.quantity,
     productId: sqlOrderProduct.product_id,
     orderId: sqlOrderProduct.order_id
-  }
+  };
   return orderProductNew;
 }
 
@@ -46,21 +55,20 @@ export class OrderStore {
 
       return convertOrderToCamelCase(result.rows[0]);
     } catch (err) {
-      throw new Error(`Could not get current order by user ${userId}. Error: ${err}`);
+      throw new Error(
+        `Could not get current order by user ${userId}. Error: ${err}`
+      );
     }
   }
 
   async create(o: Order): Promise<Order> {
     try {
       const sql =
-        "INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *";
+        'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *';
 
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [
-        o.userId,
-        o.status,
-      ]);
+      const result = await conn.query(sql, [o.userId, o.status]);
 
       const order = convertOrderToCamelCase(result.rows[0]);
 
@@ -72,22 +80,28 @@ export class OrderStore {
     }
   }
 
-  async addProduct(quantity: number, orderId: number, productId: number): Promise<OrderProduct> {
+  async addProduct(
+    quantity: number,
+    orderId: number,
+    productId: number
+  ): Promise<OrderProduct> {
     try {
-      const sql = 'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *'
+      const sql =
+        'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
 
-      const conn = await Client.connect()
+      const conn = await Client.connect();
 
-      const result = await conn
-          .query(sql, [quantity, orderId, productId])
+      const result = await conn.query(sql, [quantity, orderId, productId]);
 
       const order = convertOrderProductToCamelCase(result.rows[0]);
 
-      conn.release()
+      conn.release();
 
-      return order
+      return order;
     } catch (err) {
-      throw new Error(`Could not add product ${productId} to order ${orderId}: ${err}`)
+      throw new Error(
+        `Could not add product ${productId} to order ${orderId}: ${err}`
+      );
     }
   }
 }

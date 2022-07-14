@@ -1,48 +1,52 @@
-import supertest from "supertest";
-import app from "../../server";
+import supertest from 'supertest';
+import app from '../../server';
 
 const req = supertest(app);
 
 const createTestUser = async () => {
-  const res = await req.post("/users").send({
-    firstName: "Test",
-    lastName: "User",
-    password: "pass123",
+  const res = await req.post('/users').send({
+    firstName: 'Test',
+    lastName: 'User',
+    password: 'pass123'
   });
   return res;
 };
 
-describe("Order Handler", () => {
-  it("should create a new user, new order, new product, add a product and see that order by the user", async () => {
+describe('Order Handler', () => {
+  it('should create a new user, new order, new product, add a product and see that order by the user', async () => {
     const user = await createTestUser();
     expect(user.status).toBe(200);
 
     const product = await req
-      .post("/products")
+      .post('/products')
       .send({
-        name: "Test product",
-        price: 200,
+        name: 'Test product',
+        price: 200
       })
-      .set("Authorization", "Bearer " + user.body.token);
+      .set('Authorization', 'Bearer ' + user.body.token);
     expect(product.status).toBe(200);
 
-    const order = await req.post("/orders").send({
-      userId: user.body.id,
-      status: "active",
-    }).set("Authorization", "Bearer " + user.body.token);
+    const order = await req
+      .post('/orders')
+      .send({
+        userId: user.body.id,
+        status: 'active'
+      })
+      .set('Authorization', 'Bearer ' + user.body.token);
     expect(order.status).toBe(200);
 
     const addProduct = await req
-      .post("/orders/" + order.body.id + "/products")
+      .post('/orders/' + order.body.id + '/products')
       .send({
         quantity: 10,
-        productId: product.body.id,
-      }).set("Authorization", "Bearer " + user.body.token);
+        productId: product.body.id
+      })
+      .set('Authorization', 'Bearer ' + user.body.token);
     expect(addProduct.status).toBe(200);
 
     const currentOrderByUser = await req
-      .get("/users/" + user.body.id + "/order")
-      .set("Authorization", "Bearer " + user.body.token);
+      .get('/users/' + user.body.id + '/order')
+      .set('Authorization', 'Bearer ' + user.body.token);
     expect(currentOrderByUser.status).toBe(200);
   });
 });
