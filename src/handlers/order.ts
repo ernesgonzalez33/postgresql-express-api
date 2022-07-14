@@ -53,7 +53,7 @@ const currentOrderByUser = async (req: Request, res: Response) => {
   const userId: number = parseInt(req.params.id);
 
   try {
-    const newOrderProduct = store.currentOrderByUser(userId)
+    const newOrderProduct = await store.currentOrderByUser(userId)
     res.json(newOrderProduct);
   } catch (err) {
     res.status(400);
