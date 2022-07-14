@@ -62,8 +62,8 @@ const currentOrderByUser = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.post("/orders", create);
-  app.post("/orders/:id/products", addProduct);
+  app.post("/orders", verifyAuthToken, create);
+  app.post("/orders/:id/products", verifyAuthToken, addProduct);
   app.get("/users/:id/order", verifyAuthToken, currentOrderByUser);
 };
 
