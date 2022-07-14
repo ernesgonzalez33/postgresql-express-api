@@ -24,7 +24,7 @@ POSTGRES_HOST=127.0.0.1
 POSTGRES_DB=storefront_db
 POSTGRES_TEST_DB=storefront_db_test
 POSTGRES_USER=storefront_user
-POSTGRES_PASSWORD=<your-password>
+POSTGRES_PASSWORD=<your-db-password>
 BCRYPT_PASSWORD=<your-bcrypt-password>
 SALT_ROUNDS=10
 ENV=dev
@@ -33,25 +33,48 @@ TOKEN_SECRET=<your-token-secret>
 
 > NOTE: You can change the names of the databases.
 
-4. Spin up the database
+4. Create a database.json file with the following structure:
+
+```json
+{
+    "dev": {
+      "driver": "pg",
+      "host": "127.0.0.1",
+      "port": "5432",
+      "database": "storefront_db",
+      "user": "storefront_user",
+      "password": "<your-db-password>"
+    },
+    "test": {
+      "driver": "pg",
+      "host": "127.0.0.1",
+      "port": "5432",
+      "database": "storefront_db_test",
+      "user": "storefront_user",
+      "password": "<your-db-password>"
+    }
+}
+```
+
+5. Spin up the database
 
 ```
 $ docker-compose up
 ```
 
-5. In another terminal, run the migration:
+6. In another terminal, run the migration:
 
 ```
 $ db-migrate up
 ```
 
-5. Build the code
+7. Build the code
 
 ```
 $ npm run build
 ```
 
-6. Run the server
+8. Run the server
 
 ```
 $ node dist/server.js
