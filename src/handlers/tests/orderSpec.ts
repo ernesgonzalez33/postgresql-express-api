@@ -29,7 +29,7 @@ describe("Order Handler", () => {
     const order = await req.post("/orders").send({
       userId: user.body.id,
       status: "active",
-    });
+    }).set("Authorization", "Bearer " + user.body.token);
     expect(order.status).toBe(200);
 
     const addProduct = await req
@@ -37,7 +37,7 @@ describe("Order Handler", () => {
       .send({
         quantity: 10,
         productId: product.body.id,
-      });
+      }).set("Authorization", "Bearer " + user.body.token);
     expect(addProduct.status).toBe(200);
 
     const currentOrderByUser = await req
