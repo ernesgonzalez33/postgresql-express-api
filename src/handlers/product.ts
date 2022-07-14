@@ -27,11 +27,15 @@ const show = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
     const authorizationHeader = req.headers.authorization;
-    const token = authorizationHeader!.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET as string);
+    if (authorizationHeader !== undefined) {
+      const token = authorizationHeader.split(' ')[1];
+      jwt.verify(token, process.env.TOKEN_SECRET as string);
+    } else {
+      throw new Error(`No authorization header`);
+    }
   } catch (err) {
     res.status(401);
-    res.json('Access denied, invalid token');
+    res.json('Access denied, invalid token. Error:' + err);
     return;
   }
 

@@ -1,16 +1,20 @@
 import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { Order, OrderProduct, OrderStore } from '../models/order';
+import { Order, OrderStore } from '../models/order';
 
 const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   try {
     const authorizationHeader = req.headers.authorization;
-    const token = authorizationHeader!.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET as string);
-
+    if (authorizationHeader !== undefined) {
+      const token = authorizationHeader.split(' ')[1];
+      jwt.verify(token, process.env.TOKEN_SECRET as string);
+    } else {
+      throw new Error(`No authorization header`);
+    }
     next();
   } catch (error) {
     res.status(401);
+    res.json(error);
   }
 };
 
@@ -45,11 +49,6 @@ const addProduct = async (req: Request, res: Response) => {
 };
 
 const currentOrderByUser = async (req: Request, res: Response) => {
-  const orderProduct: OrderProduct = {
-    quantity: req.body.quantity,
-    productId: req.body.productId
-  };
-
   const userId: number = parseInt(req.params.id);
 
   try {

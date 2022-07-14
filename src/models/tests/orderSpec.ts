@@ -1,4 +1,4 @@
-import { Order, OrderStore } from '../order';
+import { OrderStore } from '../order';
 import { ProductStore } from '../product';
 import { UserStore } from '../user';
 

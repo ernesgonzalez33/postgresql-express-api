@@ -42,7 +42,7 @@ export class UserStore {
       // Convert results from the query to camelCase
       const users: User[] = [];
 
-      for (var user of result.rows) {
+      for (const user of result.rows) {
         users.push(convertUserToCamelCase(user));
       }
 
